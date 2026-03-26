@@ -324,9 +324,9 @@ def main(args):
                     
     
     if args.eval:
-        if hasattr(model.module, "merge_bn"):
+        if hasattr(model_without_ddp, "merge_bn"):
             print("Merge pre bn to speedup inference.")
-            model.module.merge_bn()
+            model_without_ddp.merge_bn()
         test_stats = evaluate(data_loader_val, model, device)
         print(f"Accuracy of the network on the {len(dataset_val)} test images: {test_stats['acc1']:.1f}%")
         return
