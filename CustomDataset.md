@@ -63,6 +63,7 @@ Download dataset:
 bash download_pcam_parallel.sh
 ```
 
+Run training:
 ```sh
 bash train.sh 1 --data-set PCAM --data-path ./dataset --output-dir outputs/pcam --epochs 100 --batch-size 32 --num_workers 5 --resume ./ckpt/MedViT_small_im1k.pth
 ```

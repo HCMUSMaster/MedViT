@@ -5,7 +5,7 @@ set -euo pipefail
 CHECKPOINT_ID="14wcH5cm8P63cMZAUHA1lhhJgMVOw_5VQ"
 CHECKPOINT_NAME="MedViT_small_im1k.pth"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TARGET_DIR="${SCRIPT_DIR}/../ckpt"
+TARGET_DIR="${SCRIPT_DIR}/ckpt"
 
 mkdir -p "${TARGET_DIR}"
 
