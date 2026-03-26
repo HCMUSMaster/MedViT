@@ -211,6 +211,9 @@ class LocalityFeedForward(nn.Module):
         ])
         self.conv = nn.Sequential(*layers)
 
+    def merge_bn(self, pre_norm):
+        merge_pre_bn(self.conv[0], pre_norm)
+
     def forward(self, x):
         x = x + self.conv(x)
         return x
@@ -242,7 +245,7 @@ class ECB(nn.Module):
     """
     Efficient Convolution Block
     """
-    def __init__(self, in_channels, out_channels, stride=1, path_dropout=0,
+    def __init__(self, in_channels, out_channels, stride=1, path_dropout=0.0,
                  drop=0, head_dim=32, mlp_ratio=3):
         super(ECB, self).__init__()
         self.in_channels = in_channels
@@ -263,7 +266,7 @@ class ECB(nn.Module):
 
     def merge_bn(self):
         if not self.is_bn_merged:
-            self.mlp.merge_bn(self.norm)
+            self.conv.merge_bn(self.norm)
             self.is_bn_merged = True
 
     def forward(self, x):
@@ -382,7 +385,7 @@ class LTB(nn.Module):
     def merge_bn(self):
         if not self.is_bn_merged:
             self.e_mhsa.merge_bn(self.norm1)
-            self.mlp.merge_bn(self.norm2)
+            self.conv.merge_bn(self.norm2)
             self.is_bn_merged = True
 
     def forward(self, x):
@@ -434,6 +437,7 @@ class MedViT(nn.Module):
             ConvBNReLU(stem_chs[2], stem_chs[2], kernel_size=3, stride=2),
         )
         input_channel = stem_chs[-1]
+        output_channel = input_channel
         features = []
         idx = 0
         dpr = [x.item() for x in torch.linspace(0, path_dropout, sum(depths))]  # stochastic depth decay rule
