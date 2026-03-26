@@ -77,6 +77,24 @@ def build_dataset(is_train, args):
         dataset = INatDataset(args.data_path, train=is_train, year=2019,
                               category=args.inat_category, transform=transform)
         nb_classes = dataset.nb_classes
+    elif args.data_set == 'PCAM':
+        # Use torchvision's PCAM dataset class. It will download if necessary.
+        # The torchvision PCAM split names may be 'train'/'val'/'test' depending on version.
+        split = 'train' if is_train else 'val'
+        try:
+            dataset = datasets.PCAM(args.data_path, split=split, transform=transform, download=True)
+        except TypeError:
+            # Older/newer torchvision variants may not accept split argument the same way;
+            # fallback to attempting without split and let the class handle it.
+            dataset = datasets.PCAM(args.data_path, transform=transform, download=True)
+        # Determine number of classes robustly
+        if hasattr(dataset, 'classes'):
+            nb_classes = len(dataset.classes)
+        else:
+            try:
+                nb_classes = len(set(dataset.targets))
+            except Exception:
+                nb_classes = args.nb_classes
     elif args.data_set == "image_folder":
         root = args.data_path if is_train else args.eval_data_path
         dataset = datasets.ImageFolder(root, transform=transform)

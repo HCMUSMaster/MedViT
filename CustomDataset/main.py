@@ -120,8 +120,12 @@ def get_args_parser():
     # Dataset parameters
     parser.add_argument('--data-path', default='/datasets01/imagenet_full_size/061417/', type=str,
                         help='dataset path')
-    parser.add_argument('--data-set', default='CIFAR', choices=['CIFAR', 'IMNET', 'INAT', 'INAT19', 'image_folder'],
-                        type=str, help='CIFAR dataset path')
+    parser.add_argument('--data-set', default='CIFAR', choices=['CIFAR', 'IMNET', 'INAT', 'INAT19', 'image_folder', 'PCAM'],
+                        type=str, help='Dataset to use (CIFAR, IMNET, INAT, INAT19, image_folder, PCAM)')
+    parser.add_argument('--nb-classes', default=2, type=int,
+                        help='Number of classes (required for image_folder)')
+    parser.add_argument('--eval_data_path', default='', type=str,
+                        help='Evaluation/validation data path (used when --data-set image_folder)')
     parser.add_argument('--use-mcloader', action='store_true', default=False, help='Use mcloader')
     parser.add_argument('--inat-category', default='name',
                         choices=['kingdom', 'phylum', 'class', 'order', 'supercategory', 'family', 'genus', 'name'],
