@@ -1,11 +1,25 @@
 import os
 import json
 
+import torch
 from torchvision import datasets, transforms
 from torchvision.datasets.folder import ImageFolder, default_loader
 
 from timm.data.constants import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD
 from timm.data import create_transform
+
+
+def _subsample_dataset(dataset, is_train, train_fraction=0.1, val_fraction=0.5, seed=0):
+    fraction = train_fraction if is_train else val_fraction
+    dataset_length = len(dataset)
+    subset_length = max(1, int(round(dataset_length * fraction)))
+    if subset_length >= dataset_length:
+        return dataset
+
+    generator = torch.Generator()
+    generator.manual_seed(seed if is_train else seed + 1)
+    indices = torch.randperm(dataset_length, generator=generator).tolist()
+    return torch.utils.data.Subset(dataset, indices[:subset_length])
 
 
 
@@ -87,6 +101,7 @@ def build_dataset(is_train, args):
             # Older/newer torchvision variants may not accept split argument the same way;
             # fallback to attempting without split and let the class handle it.
             dataset = datasets.PCAM(args.data_path, transform=transform, download=True)
+        dataset = _subsample_dataset(dataset, is_train)
         # Determine number of classes robustly
         if hasattr(dataset, 'classes'):
             nb_classes = len(dataset.classes)
