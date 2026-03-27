@@ -3,24 +3,95 @@
 [![Paper](https://img.shields.io/badge/arXiv-Paper-<COLOR>.svg)](https://arxiv.org/abs/2302.09462)
 [![Paper](https://img.shields.io/badge/Elsevier-CIBM-blue)](https://doi.org/10.1016/j.compbiomed.2023.106791)
 
-This repo is the official implementation of MedViT: A Robust Vision Transformer for Generalized Medical Image Classification.
+## Project Members
 
-## 🔥 News
-- **MedViT-V2** – [GitHub Link](https://github.com/Omid-Nejati/MedViTV2)  
-  Includes a new corruption benchmark and improvements to our architecture through integration with Kolmogorov–Arnold Networks (KAN).
-  
-## Train & Test --- Prepare data
-- (beginner friendly🍉) To train/evaluate MedViT on Cifar/Imagenet/CustomDataset follow ["CustomDataset"](https://github.com/Omid-Nejati/MedViT/blob/main/CustomDataset.md). 
-- (New version) Updated the code ["Instructions.ipynb"](https://github.com/Omid-Nejati/MedViT/blob/main/Instructions.ipynb), added the installation requirements and adversarial robustness. [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Omid-Nejati/MedViT/blob/main/Instructions.ipynb)
-
+| Student ID | Full Name           |
+|------------|---------------------|
+| 25C11057   | Dương Tấn Phát      |
+| 25C11027   | Bùi Quốc Việt       |
+| 25C11034   | Đinh Hoàng Dương    |
+| 25C11022   | Đặng Anh Tiến       |
 
 ## Introduction
-Convolutional Neural Networks (CNNs) have advanced existing medical systems for automatic disease diagnosis. However, there are still concerns about the reliability of deep medical diagnosis systems against the potential threats of adversarial attacks since inaccurate diagnosis could lead to disastrous consequences in the safety realm. In this study, we propose a highly robust yet efficient CNN-Transformer hybrid model which is equipped with the locality of CNNs as well as the global connectivity of vision Transformers. To mitigate the high quadratic complexity of the self-attention mechanism while jointly attending to information in various representation subspaces, we construct our attention mechanism by means of an efficient convolution operation. Moreover, to alleviate the fragility of our Transformer model against adversarial attacks, we attempt to learn smoother decision boundaries. To this end, we augment the shape information of an image in the high-level feature space by permuting the feature mean and variance within mini-batches. With less computational complexity, our proposed hybrid model demonstrates its high robustness and generalization ability compared to the state-of-the-art studies on a large-scale collection of standardized MedMNIST-2D datasets. 
-<div style="text-align: center">
-<img src="images/result.png" title="MedViT-S" height="60%" width="60%">
-</div>
-Figure 1. Comparison between MedViTs and the baseline ResNets, in terms of average ACC-Parameters and average AUC-Parametrs trade-off over all 2D datasets.</center>
+This project is part of the Artificial Intelligence course (K35) at HCMUS. We reproduce the **MedViT** model and extend experiments to two additional datasets:
 
+* **PCAM**: [https://github.com/basveeling/pcam](https://github.com/basveeling/pcam)
+* **LC25000**: [https://github.com/tampapath/lung_colon_image_set](https://github.com/tampapath/lung_colon_image_set)
+
+---
+
+## Installation
+
+Install dependencies using:
+
+```bash
+pip install -e .
+```
+
+---
+
+## Training
+
+Run training scripts for each dataset as follows:
+
+### 1. MedMNIST
+
+```bash
+python3 train/train_all_medmnist.py
+```
+
+### 2. PCAM
+
+```bash
+python3 train/train_pcam.py
+```
+
+### 3. LC25000
+
+```bash
+python3 train/train_lc25000.py
+```
+
+> 💡 You can customize training via additional arguments such as:
+>
+> * `--ckpt` (load pretrained checkpoint)
+> * `--freeze-backbone` (freeze feature extractor)
+
+---
+
+## Evaluation
+
+Evaluate trained models using the corresponding scripts:
+
+### 1. MedMNIST
+
+```bash
+python3 test/evaluate_mnist_ckpt.py \
+    --model <model_name> \
+    --dataset <dataset_name> \
+    --data_root <path_to_data> \
+    --ckpt <checkpoint_path>
+```
+
+### 2. PCAM
+
+```bash
+python3 test/evaluate_pcam_ckpt.py \
+    --model <model_name> \
+    --dataset <dataset_name> \
+    --data_root <path_to_data> \
+    --ckpt <checkpoint_path>
+```
+
+### 3. LC25000
+
+```bash
+python3 test/evaluate_lc25000_ckpt.py \
+    --model <model_name> \
+    --dataset <dataset_name> \
+    --data_root <path_to_data> \
+    --ckpt <checkpoint_path>
+```
 
 ## Overview
 
@@ -38,16 +109,11 @@ We provide a series of MedViT models pretrained on ILSVRC2012 ImageNet-1K datase
 | MedViT_base | ImageNet-1K |    224    | 83.92 |[ckpt](https://drive.google.com/file/d/1Lrfzjf3CK7YOztKa8D6lTUZjYJIiT7_s/view?usp=sharing) | 
 | MedViT_large | ImageNet-1K |    224   | 83.96 |[ckpt](https://drive.google.com/file/d/1sU-nLpYuCI65h7MjFJKG0yphNAlUFSKG/view?usp=sharing) | 
 
-## Visualization
 
-Visual inspection of MedViT-T and ResNet-18 using Grad-CAM on MedMNIST-2D datasets. The green rectangles is
-used to show a specific part of the image that contains information relevant to the diagnosis or analysis of a medical condition,
-where the superiority of our proposed method can be clearly seen.
-![MedViT-V](images/visualize.png)
-<center>Figure 3. The heat maps of the output feature from ResNet and MedViT.</center>
 
-## Citation
-If you find this project useful in your research, please consider cite:
+## Acknowledgement
+We acknowledge the authors of MedViT and reuse parts of their implementation from the official repository: [Omid-Nejati/MedViT](https://github.com/Omid-Nejati/MedViT)
+
 ```
 @article{manzari2023medvit,
   title={MedViT: A robust vision transformer for generalized medical image classification},
@@ -59,16 +125,3 @@ If you find this project useful in your research, please consider cite:
   publisher={Elsevier}
 }
 ```
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=Omid-Nejati/MedViT&type=Date)](https://star-history.com/#Omid-Nejati/MedViT&Date)
-
-## Acknowledgement
-We heavily borrow the code from [RVT](https://github.com/vtddggg/Robust-Vision-Transformer) and [LocalViT](https://github.com/ofsoundof/LocalViT).
-
-## Contact Information
-
-For any inquiries or questions regarding the code, please feel free to contact us directly via email:
-
-- Omid Nejaty: [omid.nejaty@gmail.com](mailto:omid.nejaty@gmail.com)
-- Hossein Kashiani: [hkashia@clemson.edu](mailto:hkashia@clemson.edu)
